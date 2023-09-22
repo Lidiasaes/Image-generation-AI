@@ -1,0 +1,33 @@
+"""
+https://huggingface.co/stabilityai/stable-diffusion-2-1
+pip install diffusers transformers accelerate scipy safetensors
+pip install --upgrade diffusers
+pip install --upgrade transformers
+
+"""
+
+import torch
+#from transformers import SAFE_WEIGHTS_NAME
+
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+
+model_id = "stabilityai/stable-diffusion-2-1"
+
+# Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
+pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+pipe.batch_size = 1 # para no acabar con la memoria que tenemos disponible
+pipe = pipe.to("cuda")
+
+
+""" 
+prompt1 = "a photo of an astronaut riding a horse on mars"
+image1 = pipe(prompt1).images[0]   
+image1.save("astronaut_rides_horse.png")
+"""
+
+
+
+prompt = "a color photo of three horses in the countryside. In color. The style is as a Dali painting"
+image = pipe(prompt).images[0] # selecciono el index 0 porque quiero la primera probabilidad
+image.save("medieval_horses4_Dali.png")
