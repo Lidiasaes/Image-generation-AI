@@ -1,0 +1,36 @@
+"""
+Disclaimer: I do not remember where I picked this info, if it was a tutorial or just some documentation
+
+pip install PyPDF2 pytesseract
+
+pip install ghostscript
+
+pip install poppler - no es necesairo
+pip install  tabula-py
+
+
+"""
+
+import PyPDF2
+import pytesseract
+from PIL import Image
+from pdf2image import convert_from_path
+
+mypath= "C:/Users/User/OneDrive/Desktop/Items_from_Psychometric_Tests_as_Training_Data_for.pdf"
+pdf_file = open(mypath, 'rb')
+pdf_reader = PyPDF2.PdfReader(pdf_file)
+
+text_content = []
+for page in pdf_reader.pages:
+    text_content.append(page.extract_text())
+
+text_content= []
+for page in pdf_reader.pages:
+    text_content = ' '.join(page.extract_text() for page in pdf_reader.pages)
+
+pdf_file.close()
+
+
+with open('prueba-readpdf.txt', 'w', encoding='utf-8') as txt_file:
+    for content in text_content:
+        txt_file.write(content)
